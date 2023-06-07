@@ -8,6 +8,7 @@ import Image from "react-bootstrap/Image";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
+import moment from "moment/moment";
 
 const Movie = (props) => {
   const { id } = useParams();
@@ -75,7 +76,10 @@ const Movie = (props) => {
                       />
                     </div>
                     <div>
-                      <h5>{review.name + " reviewed on " + review.date}</h5>
+                      {/* <h5>{review.name + " reviewed on " + review.date}</h5> */}
+                      <h5>{review.name + " reviewd on"}
+                       {moment(review.date).format("Do MMMM YYYY")}
+                      </h5>
                       <p>{review.review}</p>
 
                       {props.user && props.user.id === review.user_id && (

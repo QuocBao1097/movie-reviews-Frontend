@@ -1,7 +1,6 @@
-
 import React, { useState } from "react";
 import MovieDataService from "../services/movies";
-import { Link,useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
@@ -10,7 +9,10 @@ const AddReview = (props) => {
 
   let editing = false;
   let initialReviewState = "";
-
+  if (props.location.state && props.location.state.currentReview) {
+    editing = true;
+    initialReviewState = props.location.state.currentReview.review;
+  }
   const [review, setReview] = useState(initialReviewState);
   // keeps track if review is submitted
   const [submitted, setSubmitted] = useState(false);
@@ -28,15 +30,28 @@ const AddReview = (props) => {
       movie_id: id, // get movie id derect from url
     };
 
-
-    MovieDataService.createReview(data)
-      .then((response) => {
-        setSubmitted(true);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    if (editing) {
+      // get existing review id
+      data.review_id = props.location.state.currentReview._id;
+      MovieDataService.updateReview(data)
+        .then((response) => {
+          setSubmitted(true);
+          console.log(response.data);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    } else {
+      MovieDataService.createReview(data)
+        .then((response) => {
+          setSubmitted(true);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
   };
+  
   return (
     <div>
       {submitted ? (
